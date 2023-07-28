@@ -1,0 +1,6 @@
+# local files
+/node_modules/
+/coverage/
+
+# system files
+.DS_Store
