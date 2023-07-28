@@ -1,4 +1,4 @@
-name: page-loader CI
+name: page-loader-ci
 
 on:
   - push
