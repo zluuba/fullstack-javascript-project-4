@@ -1,6 +1,7 @@
 # local files
 /node_modules/
 /coverage/
+page_loader.log
 
 # system files
 .DS_Store
