@@ -53,11 +53,6 @@ test('downloadPage main', async () => {
 
   await downloadPage('https://ru.hexlet.io/courses', tempDir);
 
-  const files = await fsp.readdir(tempDir);
-
-  console.log('------ FILES -------');
-  console.log(files);
-
   const expectedPng = await fsp.readFile(path.join(tempDir, resources.dir, resources.png), 'utf-8');
   const expectedCss = await fsp.readFile(path.join(tempDir, resources.dir, resources.css), 'utf-8');
   const expectedJs = await fsp.readFile(path.join(tempDir, resources.dir, resources.js), 'utf-8');
