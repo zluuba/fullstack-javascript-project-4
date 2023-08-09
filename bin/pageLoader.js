@@ -2,8 +2,6 @@
 import { Command } from 'commander';
 import downloadPage from '../src/core.js';
 
-const currentDir = process.cwd();
-
 const program = new Command();
 
 program
@@ -12,7 +10,7 @@ program
   .version('0.1.0')
   .helpOption('-h, --help', 'display help for command')
   .argument('<url>')
-  .option('-o, --output [dir]', 'output dir', currentDir)
+  .option('-o, --output [dir]', 'output dir', process.cwd())
   .action((url, options) => {
     downloadPage(url, options.output)
       .then((pageName) => console.log(pageName))
