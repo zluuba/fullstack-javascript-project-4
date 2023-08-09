@@ -18,7 +18,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   const resoursesDirName = `${pageName}_files`;
 
   log(`Getting data from ${rawLink}`);
-  return fsp.access(outPath, fsp.constants.R_OK && fsp.constants.W_OK)
+  return fsp.access(outPath)
     .then(() => axios.get(rawLink))
     .then((response) => {
       if (response.status !== 200) {
