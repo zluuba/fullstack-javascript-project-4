@@ -18,9 +18,14 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   const resoursesDirName = `${pageName}_files`;
 
   log(`Getting data from ${rawLink}`);
-  return fsp.access(outPath)
+  return fsp.access(outPath, fsp.constants.R_OK && fsp.constants.W_OK)
     .then(() => axios.get(rawLink))
-    .then((response) => getResources(rawLink, response.data, resoursesDirName))
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error('Can not download HTML-page. Status code: ', response.status);
+      }
+      return getResources(rawLink, response.data, resoursesDirName);
+    })
     .then(({ html, resources }) => {
       log(`Recieved resources: ${resources}`);
       const htmlPagePath = path.join(outPath, htmlPageName);
