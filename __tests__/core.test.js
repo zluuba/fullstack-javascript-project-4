@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const tmpDir = path.join(os.tmpdir());
 
 let htmlAfter;
 let htmlBefore;
@@ -37,6 +38,11 @@ beforeAll(async () => {
   jsResource = await fsp.readFile(path.join(fixtureDir, resources.js), 'utf-8');
 });
 
+// afterAll(async () => {
+//   await fsp.unlink(path.join(tmpDir, resources.html));
+//   await fsp.rm(path.join(tmpDir, resources.dir), { recursive: true, force: true });
+// });
+
 test('downloadPage main', async () => {
   nock(/ru\.hexlet\.io/)
     .get(/\/courses/)
@@ -48,7 +54,6 @@ test('downloadPage main', async () => {
     .get(/\/packs\/js\/runtime\.js/)
     .reply(200, jsResource);
 
-  const tmpDir = path.join(os.tmpdir());
   await downloadPage('https://ru.hexlet.io/courses', tmpDir);
 
   const expectedPng = await fsp.readFile(path.join(tmpDir, resources.dir, resources.png), 'utf-8');
@@ -56,8 +61,8 @@ test('downloadPage main', async () => {
   const expectedJs = await fsp.readFile(path.join(tmpDir, resources.dir, resources.js), 'utf-8');
   const expectedHtml = await fsp.readFile(path.join(tmpDir, resources.html), 'utf-8');
 
-  expect(pngResource).toEqual(expectedPng);
-  expect(cssResource).toEqual(expectedCss);
-  expect(jsResource).toEqual(expectedJs);
-  expect(htmlAfter).toEqual(expectedHtml);
+  expect(expectedPng).toEqual(pngResource);
+  expect(expectedCss).toEqual(cssResource);
+  expect(expectedJs).toEqual(jsResource);
+  expect(expectedHtml).toEqual(htmlAfter);
 });
