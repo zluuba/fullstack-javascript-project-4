@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const tmpDir = path.join(os.tmpdir());
+const tmpDir = os.tmpdir();
 
 let htmlAfter;
 let htmlBefore;
@@ -55,6 +55,11 @@ test('downloadPage main', async () => {
     .reply(200, jsResource);
 
   await downloadPage('https://ru.hexlet.io/courses', tmpDir);
+
+  console.log('-------------------------');
+  console.log(tmpDir);
+  console.log(await fsp.realpath(tmpDir));
+  console.log('-------------------------');
 
   const expectedPng = await fsp.readFile(path.join(tmpDir, resources.dir, resources.png), 'utf-8');
   const expectedCss = await fsp.readFile(path.join(tmpDir, resources.dir, resources.css), 'utf-8');

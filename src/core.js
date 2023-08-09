@@ -7,7 +7,7 @@ import {
   getPageName,
 } from './common.js';
 
-const downloadPage = (rawLink, outPath) => {
+const downloadPage = (rawLink, outPath = process.cwd()) => {
   fsp.access(outPath)
     .catch(() => fsp.mkdir(outPath, { recursive: true }));
 
