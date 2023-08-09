@@ -1,20 +1,26 @@
 import fsp from 'fs/promises';
 import path from 'path';
 import axios from 'axios';
+import debug from 'debug';
 import {
   getResources,
   downloadResources,
   getPageName,
 } from './common.js';
 
+const log = debug('page-loader');
+
 const downloadPage = (rawLink, outPath = process.cwd()) => {
-  fsp.access(outPath)
-    .catch(() => fsp.mkdir(outPath, { recursive: true }));
+  console.log(`Recieved URL: ${rawLink}, Path: ${outPath}`);
+  log(`Recieved URL: ${rawLink}, Path: ${outPath}`);
+  // fsp.access(outPath)
+  //   .catch(() => fsp.mkdir(outPath, { recursive: true }));
 
   const pageName = getPageName(rawLink);
   const htmlPageName = `${pageName}.html`;
   const resoursesDirName = `${pageName}_files`;
 
+  log(`Getting data from ${rawLink}`);
   return axios.get(rawLink)
     .then((response) => getResources(rawLink, response.data, resoursesDirName))
     .then(({ html, resources }) => {
