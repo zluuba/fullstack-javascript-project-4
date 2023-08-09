@@ -30,7 +30,6 @@ const resources = {
 nock.disableNetConnect();
 
 beforeAll(async () => {
-  tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
   htmlAfter = await fsp.readFile(getFixturePath(resources.html), 'utf-8');
 
   const fixtureDir = getFixturePath(resources.dir);
@@ -50,6 +49,8 @@ test('downloadPage main', async () => {
     .reply(200, cssResource)
     .get(/\/packs\/js\/runtime\.js/)
     .reply(200, jsResource);
+  
+  tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'));
 
   await downloadPage('https://ru.hexlet.io/courses', tempDir);
 
