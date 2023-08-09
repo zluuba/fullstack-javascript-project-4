@@ -10,7 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const tmpDir = os.tmpdir();
+
+let tempDir;
 
 let htmlAfter;
 let htmlBefore;
@@ -29,6 +30,7 @@ const resources = {
 nock.disableNetConnect();
 
 beforeAll(async () => {
+  tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'page-loader-'))
   htmlAfter = await fsp.readFile(getFixturePath(resources.html), 'utf-8');
 
   const fixtureDir = getFixturePath(resources.dir);
@@ -37,11 +39,6 @@ beforeAll(async () => {
   cssResource = await fsp.readFile(path.join(fixtureDir, resources.css), 'utf-8');
   jsResource = await fsp.readFile(path.join(fixtureDir, resources.js), 'utf-8');
 });
-
-// afterAll(async () => {
-//   await fsp.unlink(path.join(tmpDir, resources.html));
-//   await fsp.rm(path.join(tmpDir, resources.dir), { recursive: true, force: true });
-// });
 
 test('downloadPage main', async () => {
   nock(/ru\.hexlet\.io/)
@@ -54,17 +51,17 @@ test('downloadPage main', async () => {
     .get(/\/packs\/js\/runtime\.js/)
     .reply(200, jsResource);
 
-  await downloadPage('https://ru.hexlet.io/courses', tmpDir);
+  await downloadPage('https://ru.hexlet.io/courses', tempDir);
 
-  console.log('-------------------------');
-  console.log(tmpDir);
-  console.log(await fsp.realpath(tmpDir));
-  console.log('-------------------------');
+  const files = await fsp.readdir(tempDir);
 
-  const expectedPng = await fsp.readFile(path.join(tmpDir, resources.dir, resources.png), 'utf-8');
-  const expectedCss = await fsp.readFile(path.join(tmpDir, resources.dir, resources.css), 'utf-8');
-  const expectedJs = await fsp.readFile(path.join(tmpDir, resources.dir, resources.js), 'utf-8');
-  const expectedHtml = await fsp.readFile(path.join(tmpDir, resources.html), 'utf-8');
+  console.log('------ FILES -------');
+  console.log(files);
+
+  const expectedPng = await fsp.readFile(path.join(tempDir, resources.dir, resources.png), 'utf-8');
+  const expectedCss = await fsp.readFile(path.join(tempDir, resources.dir, resources.css), 'utf-8');
+  const expectedJs = await fsp.readFile(path.join(tempDir, resources.dir, resources.js), 'utf-8');
+  const expectedHtml = await fsp.readFile(path.join(tempDir, resources.html), 'utf-8');
 
   expect(expectedPng).toEqual(pngResource);
   expect(expectedCss).toEqual(cssResource);
