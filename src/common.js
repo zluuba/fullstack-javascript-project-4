@@ -29,7 +29,6 @@ const getResource = (link, resourceUrl) => {
 };
 
 const getResources = (link, html, resDirName) => {
-  log('Getting all resources.. ');
   let newHtml = html;
   const $ = cheerio.load(html);
   const resources = [];
@@ -43,7 +42,7 @@ const getResources = (link, html, resDirName) => {
         const resource = getResource(link, url);
 
         if (resource.name) {
-          log(`Resource was find: ${resource.name}`);
+          log(`Resource was find: ${resource}`);
           resources.push(resource);
           newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
         }
@@ -61,7 +60,8 @@ const downloadResources = (resources, outDir) => resources
     log(`Download resource: ${url}`);
 
     axios.get(url, { responseType: 'arraybuffer' })
-      .then(({ data }) => fsp.writeFile(fullPath, data));
+      .then(({ data }) => fsp.writeFile(fullPath, data))
+      .catch((error) => log(`Download resource error: ${error}`));
   });
 
 export {
