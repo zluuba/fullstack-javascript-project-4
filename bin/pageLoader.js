@@ -15,7 +15,7 @@ program
     downloadPage(url, options.output)
       .then((pageName) => console.log(pageName))
       .catch((error) => {
-        console.error(`Oops. ${error}`);
+        console.error(`Oops. ${error.message}`);
         process.exit(1);
       });
   });
