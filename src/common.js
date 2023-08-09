@@ -2,12 +2,16 @@ import fsp from 'fs/promises';
 import path from 'path';
 import axios from 'axios';
 import cheerio from 'cheerio';
+import debug from 'debug';
+
+const log = debug('page-loader');
 
 const tags = { img: 'src', link: 'href', script: 'src' };
 
 const getPageName = (url) => url.replace(/htt(p|ps):\/\//, '').replace(/[^\w]/g, '-');
 
 const getResource = (link, resourceUrl) => {
+  log(`Getting resource: ${resourceUrl}`);
   const urlLink = new URL(link);
   const url = new URL(resourceUrl, link);
 
@@ -25,6 +29,7 @@ const getResource = (link, resourceUrl) => {
 };
 
 const getResources = (link, html, resDirName) => {
+  log('Getting all resources.. ');
   let newHtml = html;
   const $ = cheerio.load(html);
   const resources = [];
@@ -38,6 +43,7 @@ const getResources = (link, html, resDirName) => {
         const resource = getResource(link, url);
 
         if (resource.name) {
+          log(`Resource was find: ${resource.name}`);
           resources.push(resource);
           newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
         }
@@ -52,8 +58,10 @@ const downloadResources = (resources, outDir) => resources
     const { url, name } = resource;
     const fullPath = path.join(outDir, name);
 
-    axios.get(url)
-      .then((response) => fsp.writeFile(fullPath, response.data));
+    log(`Download resource: ${url}`);
+
+    axios.get(url, { responseType: 'arraybuffer' })
+      .then(({ data }) => fsp.writeFile(fullPath, data));
   });
 
 export {
