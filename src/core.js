@@ -41,6 +41,10 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
       });
     })
     .then((prettifiedHtml) => {
+      log('------------------ prettifiedHtml ------------------');
+      log(prettifiedHtml);
+      log('-----------------------------------------------------');
+
       log(`Writing HTML-file: ${htmlPagePath}`);
       return fsp.writeFile(htmlPagePath, prettifiedHtml);
     })
