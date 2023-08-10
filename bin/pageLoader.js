@@ -11,13 +11,12 @@ program
   .helpOption('-h, --help', 'display help for command')
   .argument('<url>')
   .option('-o, --output [dir]', 'output dir', process.cwd())
-  .action((url, options) => {
-    downloadPage(url, options.output)
-      .then((pageName) => console.log(pageName))
-      .catch((error) => {
-        console.error(`Oops. ${error.message}`);
-        process.exit(1);
-      });
-  });
+  .action((url, options) => downloadPage(url, options.output)
+    .then((pageName) => console.log(pageName))
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(`Oops. ${error.message}`);
+      process.exit(1);
+    }));
 
 program.parse();
