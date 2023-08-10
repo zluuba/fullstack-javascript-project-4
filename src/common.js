@@ -29,8 +29,8 @@ const getResource = (link, resourceUrl) => {
 };
 
 const getResources = (link, html, resDirName) => {
-  let newHtml = html;
   const $ = cheerio.load(html);
+  let newHtml = $.html();
   const resources = [];
 
   Object
