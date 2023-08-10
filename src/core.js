@@ -22,6 +22,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   const resoursesDirName = `${pageName}_files`;
   const resourcesDirPath = path.join(outPath, resoursesDirName);
 
+  let currResources;
   log(`Getting data from ${rawLink}`);
 
   return fsp.access(outPath)
@@ -34,21 +35,15 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
     })
     .then(({ html, resources }) => {
       log(`Writing HTML-file: ${htmlPagePath}`);
-      fsp.writeFile(htmlPagePath, html)
-        .catch((e) => {
-          throw new Error(e);
-        });
-      return resources;
+      currResources = resources;
+      return fsp.writeFile(htmlPagePath, html);
     })
-    .then((resources) => {
-      if (resources) {
+    .then(() => {
+      if (currResources) {
         log(`Creating resource dir: ${resourcesDirPath}`);
-        fsp.mkdir(resourcesDirPath, { recursive: true })
-          .catch((e) => {
-            throw new Error(e);
-          });
+        fsp.mkdir(resourcesDirPath, { recursive: true });
       }
-      return resources;
+      return currResources;
     })
     .then((resources) => {
       const tasks = resources.map(({ url, name }) => {
