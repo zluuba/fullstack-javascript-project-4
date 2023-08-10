@@ -23,6 +23,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   const resourcesDirPath = path.join(outPath, resoursesDirName);
 
   log(`Getting data from ${rawLink}`);
+
   return fsp.access(outPath)
     .then(() => axios.get(rawLink))
     .then((response) => {
@@ -48,7 +49,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
         const fullPath = path.join(resourcesDirPath, name);
 
         return {
-          title: `Downloading asset: ${url}`,
+          title: `Downloading resource: ${url}`,
           task: () => downloadResource(url, fullPath)
             .catch(() => {}),
         };
@@ -58,7 +59,10 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
       return listr.run();
     })
     .then(() => log('Finishing program... \n'))
-    .then(() => htmlPageName);
+    .then(() => htmlPageName)
+    .catch((error) => {
+      throw new Error(error);
+    });
 };
 
 export default downloadPage;

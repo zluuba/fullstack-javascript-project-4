@@ -13,7 +13,6 @@ program
   .option('-o, --output [dir]', 'output dir', process.cwd())
   .action((url, options) => downloadPage(url, options.output)
     .then((pageName) => console.log(pageName))
-    .then(() => process.exit(0))
     .catch((error) => {
       console.error(`Oops. ${error.message}`);
       process.exit(1);
