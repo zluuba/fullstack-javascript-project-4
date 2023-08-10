@@ -34,13 +34,19 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
     })
     .then(({ html, resources }) => {
       log(`Writing HTML-file: ${htmlPagePath}`);
-      fsp.writeFile(htmlPagePath, html);
+      fsp.writeFile(htmlPagePath, html)
+        .catch((e) => {
+          throw new Error(e);
+        });
       return resources;
     })
     .then((resources) => {
       if (resources) {
         log(`Creating resource dir: ${resourcesDirPath}`);
-        fsp.mkdir(resourcesDirPath, { recursive: true });
+        fsp.mkdir(resourcesDirPath, { recursive: true })
+          .catch((e) => {
+            throw new Error(e);
+          });
       }
       return resources;
     })
@@ -59,10 +65,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
       return listr.run();
     })
     .then(() => log('Finishing program... \n'))
-    .then(() => htmlPageName)
-    .catch((error) => {
-      throw new Error(error);
-    });
+    .then(() => htmlPageName);
 };
 
 export default downloadPage;
