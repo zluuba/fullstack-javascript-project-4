@@ -36,7 +36,9 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
     })
     .then(({ html, resources }) => {
       currResources = resources;
-      return prettier.format(html, { parser: 'html' });
+      return prettier.format(html, {
+        parser: 'html', printWidth: Infinity, htmlWhitespaceSensitivity: 'ignore',
+      });
     })
     .then((prettifiedHtml) => {
       log(`Writing HTML-file: ${htmlPagePath}`);
