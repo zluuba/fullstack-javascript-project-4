@@ -22,7 +22,12 @@ const getResource = (link, resourceUrl) => {
   const fullUrl = url.href;
 
   const urlHostName = getPageName(url.host);
-  const resourceName = url.pathname.replace(/[^\w.]/g, '-');
+  let resourceName = url.pathname.replace(/[^\w.]/g, '-');
+
+  if (resourceName.split('.').length === 1) {
+    resourceName += '.html';
+  }
+
   const fullName = `${urlHostName}${resourceName}`;
 
   return { url: fullUrl, name: fullName };
@@ -45,11 +50,7 @@ const getResources = (link, html, resDirName) => {
           log(`Resource was find: ${resource}`);
           resources.push(resource);
 
-          if (resource.name.split('.').length === 1) {
-            newHtml = newHtml.replace(url, path.join(resDirName, `${resource.name}.html`));
-          } else {
-            newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
-          }
+          newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
         }
       });
     });

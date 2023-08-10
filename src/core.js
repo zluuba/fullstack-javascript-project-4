@@ -10,16 +10,6 @@ import {
   downloadResource,
 } from './common.js';
 
-// const options = {
-//   parser: 'html',
-//   trailingComma: "all",
-//   tabWidth: 2,
-//   semi: true,
-//   singleQuote: true,
-//   printWidth: 120,
-//   vueIndentScriptAndStyle: false,
-// };
-
 const log = debug('page-loader');
 
 const downloadPage = (rawLink, outPath = process.cwd()) => {
