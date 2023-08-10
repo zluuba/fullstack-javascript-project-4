@@ -87,8 +87,10 @@ test('Error: page loading - 404 status code', async () => {
     .get('/courses')
     .reply(404);
 
-  return downloadPage('https://ru.hexlet.io/courses', tempDir)
-    .catch((error) => expect(error.message).toMatch('Request failed with status code 404'));
+  return expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: page loading - 500 status code', async () => {
@@ -96,8 +98,10 @@ test('Error: page loading - 500 status code', async () => {
     .get('/courses')
     .reply(500);
 
-  return downloadPage('https://ru.hexlet.io/courses', tempDir)
-    .catch((error) => expect(error.message).toMatch('Request failed with status code 500'));
+  return expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: resourses loading - 404 status code', async () => {
@@ -111,7 +115,7 @@ test('Error: resourses loading - 404 status code', async () => {
     .get('/packs/js/runtime.js')
     .reply(404);
 
-  expect(async () => {
+  return expect(async () => {
     const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
     expect(expected).toEqual(undefined);
   }).rejects.toThrow();
@@ -120,9 +124,9 @@ test('Error: resourses loading - 404 status code', async () => {
 test('Error: page loading - network error', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
-    .replyWithError();
+    .replyWithError('Network error');
 
-  expect(async () => {
+  return expect(async () => {
     const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
     expect(expected).toEqual(undefined);
   }).rejects.toThrow();
