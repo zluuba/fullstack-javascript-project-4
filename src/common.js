@@ -52,20 +52,12 @@ const getResources = (link, html, resDirName) => {
   return { html: newHtml, resources };
 };
 
-const downloadResources = (resources, outDir) => resources
-  .forEach((resource) => {
-    const { url, name } = resource;
-    const fullPath = path.join(outDir, name);
-
-    log(`Download resource: ${url}`);
-
-    axios.get(url, { responseType: 'arraybuffer' })
-      .then(({ data }) => fsp.writeFile(fullPath, data))
-      .catch((error) => log(`Download resource error: ${error}`));
-  });
+const downloadResource = (url, resourcePath) => axios
+  .get(url, { responseType: 'arraybuffer' })
+  .then((response) => fsp.writeFile(resourcePath, response.data));
 
 export {
   getResources,
-  downloadResources,
   getPageName,
+  downloadResource,
 };
