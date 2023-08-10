@@ -17,7 +17,7 @@ const resources = {
   html: 'ru-hexlet-io-courses.html',
   png: 'ru-hexlet-io-assets-professions-nodejs.png',
   css: 'ru-hexlet-io-assets-application.css',
-  js: 'ru-hexlet-io-packs-js-runtime.js'
+  js: 'ru-hexlet-io-packs-js-runtime.js',
 };
 
 let tempDir;
@@ -41,7 +41,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  tempDir = os.tmpdir();;
+  tempDir = os.tmpdir();
 });
 
 test('downloadPage main', async () => {
@@ -74,25 +74,34 @@ test('downloadPage main', async () => {
 test('Error: wrong outpath', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
-    .reply(200, htmlBefore)
-  
-  expect(downloadPage('https://ru.hexlet.io/courses', '/wrong/')).rejects.toThrow();
+    .reply(200, htmlBefore);
+
+  expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', '/wrong/');
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: page loading - 404 status code', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
-    .reply(404)
-  
-  expect(downloadPage('https://ru.hexlet.io/courses', tempDir)).rejects.toThrow();
+    .reply(404);
+
+  expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: page loading - 500 status code', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
-    .reply(500)
-  
-  expect(downloadPage('https://ru.hexlet.io/courses', tempDir)).rejects.toThrow();
+    .reply(500);
+
+  expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: resourses loading - 404 status code', async () => {
@@ -106,15 +115,21 @@ test('Error: resourses loading - 404 status code', async () => {
     .get('/packs/js/runtime.js')
     .reply(404);
 
-  expect(downloadPage('https://ru.hexlet.io/courses', tempDir)).rejects.toThrow();
+  expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 test('Error: page loading - network error', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
-    .replyWithError()
-  
-  expect(downloadPage('https://ru.hexlet.io/courses', tempDir)).rejects.toThrow();
+    .replyWithError();
+
+  expect(async () => {
+    const expected = await downloadPage('https://ru.hexlet.io/courses', tempDir);
+    expect(expected).toEqual(undefined);
+  }).rejects.toThrow();
 });
 
 afterEach(() => {
