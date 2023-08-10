@@ -2,10 +2,11 @@ import fsp from 'fs/promises';
 import path from 'path';
 import axios from 'axios';
 import debug from 'debug';
+import Listr from 'listr';
 import {
   getResources,
-  downloadResources,
   getPageName,
+  downloadResource,
 } from './common.js';
 
 const log = debug('page-loader');
@@ -14,34 +15,50 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   log(`Recieved URL: ${rawLink}, Path: ${outPath}`);
 
   const pageName = getPageName(rawLink);
+
   const htmlPageName = `${pageName}.html`;
+  const htmlPagePath = path.join(outPath, htmlPageName);
+
   const resoursesDirName = `${pageName}_files`;
+  const resourcesDirPath = path.join(outPath, resoursesDirName);
 
   log(`Getting data from ${rawLink}`);
   return fsp.access(outPath)
     .then(() => axios.get(rawLink))
     .then((response) => {
       if (response.status !== 200) {
-        throw new Error('Can not download HTML-page. Status code: ', response.status);
+        throw new Error('Network error. Cannot download HTML-page.');
       }
       return getResources(rawLink, response.data, resoursesDirName);
     })
     .then(({ html, resources }) => {
-      log(`Recieved resources: ${resources}`);
-      const htmlPagePath = path.join(outPath, htmlPageName);
-      fsp.writeFile(htmlPagePath, html);
       log(`Writing HTML-file: ${htmlPagePath}`);
-
+      fsp.writeFile(htmlPagePath, html);
+      return resources;
+    })
+    .then((resources) => {
       if (resources) {
-        const resourcesPath = path.join(outPath, resoursesDirName);
-        fsp.mkdir(resourcesPath, { recursive: true });
-        log(`Resource dir: ${resourcesPath}`);
-        downloadResources(resources, resourcesPath);
+        log(`Creating resource dir: ${resourcesDirPath}`);
+        fsp.mkdir(resourcesDirPath, { recursive: true });
       }
+      return resources;
+    })
+    .then((resources) => {
+      const tasks = resources.map(({ url, name }) => {
+        const fullPath = path.join(resourcesDirPath, name);
 
-      log('Finishing program... \n');
-      return htmlPageName;
-    });
+        return {
+          title: `Downloading asset: ${url}`,
+          task: () => downloadResource(url, fullPath)
+            .catch(() => {}),
+        };
+      });
+
+      const listr = new Listr(tasks, { concurrent: true });
+      return listr.run();
+    })
+    .then(() => log('Finishing program... \n'))
+    .then(() => htmlPageName);
 };
 
 export default downloadPage;
