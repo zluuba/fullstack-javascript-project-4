@@ -10,15 +10,15 @@ import {
   downloadResource,
 } from './common.js';
 
-const options = {
-  parser: 'html',
-  trailingComma: "all",
-  tabWidth: 2,
-  semi: true,
-  singleQuote: true,
-  printWidth: 120,
-  vueIndentScriptAndStyle: false,
-};
+// const options = {
+//   parser: 'html',
+//   trailingComma: "all",
+//   tabWidth: 2,
+//   semi: true,
+//   singleQuote: true,
+//   printWidth: 120,
+//   vueIndentScriptAndStyle: false,
+// };
 
 const log = debug('page-loader');
 
@@ -46,7 +46,7 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
     })
     .then(({ html, resources }) => {
       currResources = resources;
-      return html;
+      return prettier.format(html, { parser: 'html' });
     })
     .then((prettifiedHtml) => {
       log(`Writing HTML-file: ${htmlPagePath}`);

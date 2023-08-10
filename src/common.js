@@ -15,7 +15,7 @@ const getResource = (link, resourceUrl) => {
   const urlLink = new URL(link);
   const url = new URL(resourceUrl, link);
 
-  if (!resourceUrl || !url.pathname.includes('.') || urlLink.host !== url.host) {
+  if (!resourceUrl || urlLink.host !== url.host) {
     return {};
   }
 
@@ -44,7 +44,12 @@ const getResources = (link, html, resDirName) => {
         if (resource.name) {
           log(`Resource was find: ${resource}`);
           resources.push(resource);
-          newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
+
+          if (resource.name.split('.').length === 1) {
+            newHtml = newHtml.replace(url, path.join(resDirName, `${resource.name}.html`));
+          } else {
+            newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
+          }
         }
       });
     });
