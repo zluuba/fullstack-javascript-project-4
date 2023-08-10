@@ -3,6 +3,7 @@ import path from 'path';
 import axios from 'axios';
 import debug from 'debug';
 import Listr from 'listr';
+import prettier from 'prettier';
 import {
   getResources,
   getPageName,
@@ -34,9 +35,12 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
       return getResources(rawLink, response.data, resoursesDirName);
     })
     .then(({ html, resources }) => {
-      log(`Writing HTML-file: ${htmlPagePath}`);
       currResources = resources;
-      return fsp.writeFile(htmlPagePath, html);
+      return prettier.format(html, { parser: 'html' });
+    })
+    .then((prettifiedHtml) => {
+      log(`Writing HTML-file: ${htmlPagePath}`);
+      return fsp.writeFile(htmlPagePath, prettifiedHtml);
     })
     .then(() => {
       if (currResources) {
