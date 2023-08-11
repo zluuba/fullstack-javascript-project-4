@@ -12,10 +12,10 @@ import {
 
 const log = debug('page-loader');
 
-const downloadPage = (rawLink, outPath = process.cwd()) => {
-  log(`Recieved URL: ${rawLink}, Path: ${outPath}`);
+const downloadPage = (sourceUrl, outPath = process.cwd()) => {
+  log(`Recieved URL: "${sourceUrl}", Path: "${outPath}"`);
 
-  const pageName = getPageName(rawLink);
+  const pageName = getPageName(sourceUrl);
 
   const htmlPageName = `${pageName}.html`;
   const htmlPagePath = path.join(outPath, htmlPageName);
@@ -24,15 +24,14 @@ const downloadPage = (rawLink, outPath = process.cwd()) => {
   const resourcesDirPath = path.join(outPath, resoursesDirName);
 
   let currResources;
-  log(`Getting data from ${rawLink}`);
+  log(`Getting data from ${sourceUrl}`);
 
-  return fsp.access(outPath)
-    .then(() => axios.get(rawLink))
+  return axios.get(sourceUrl)
     .then((response) => {
       if (response.status !== 200) {
         throw new Error('Network error. Cannot download HTML-page.');
       }
-      return getResources(rawLink, response.data, resoursesDirName);
+      return getResources(sourceUrl, response.data, resoursesDirName);
     })
     .then(({ html, resources }) => {
       currResources = resources;

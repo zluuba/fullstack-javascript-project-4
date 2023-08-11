@@ -10,57 +10,51 @@ const tags = { img: 'src', link: 'href', script: 'src' };
 
 const getPageName = (url) => url.replace(/htt(p|ps):\/\//, '').replace(/[^\w]/g, '-');
 
-const getResource = (link, resourceUrl) => {
-  log(`Getting resource: ${resourceUrl}`);
-  const urlLink = new URL(link);
-  const url = new URL(resourceUrl, link);
+const downloadResource = (url, resourcePath) => axios
+  .get(url, { responseType: 'arraybuffer' })
+  .then((response) => fsp.writeFile(resourcePath, response.data));
 
-  if (!resourceUrl || urlLink.host !== url.host) {
+const getResource = (sourceUrl, resourceUrl) => {
+  log(`Getting resource: ${resourceUrl}`);
+  const urlSource = new URL(sourceUrl);
+  const urlResource = new URL(resourceUrl, sourceUrl);
+
+  if (!resourceUrl || urlSource.host !== urlResource.host) {
     return {};
   }
 
-  const fullUrl = url.href;
+  const fullUrl = urlResource.href;
+  const urlHostName = getPageName(urlResource.host);
+  const resourceName = urlResource.pathname.replace(/[^\w.]/g, '-');
 
-  const urlHostName = getPageName(url.host);
-  let resourceName = url.pathname.replace(/[^\w.]/g, '-');
-
-  if (resourceName.split('.').length === 1) {
-    resourceName += '.html';
-  }
-
-  const fullName = `${urlHostName}${resourceName}`;
+  let fullName = urlHostName + resourceName;
+  fullName = resourceName.includes('.') ? fullName : `${fullName}.html`;
 
   return { url: fullUrl, name: fullName };
 };
 
 const getResources = (link, html, resDirName) => {
-  const $ = cheerio.load(html);
-  let newHtml = $.html();
   const resources = [];
+  let newHtml = html;
+  const $ = cheerio.load(html);
 
   Object
     .entries(tags)
-    .forEach(([tag, attr]) => {
-      const links = $(tag).toArray();
-      links.forEach((elem) => {
+    .forEach(([tag, attr]) => $(tag).toArray()
+      .forEach((elem) => {
         const url = $(elem).attr(attr);
         const resource = getResource(link, url);
 
         if (resource.name) {
-          log(`Resource was find: ${resource}`);
-          resources.push(resource);
+          log(`Resource was find: ${resource.url}`);
 
+          resources.push(resource);
           newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
         }
-      });
-    });
+      }));
 
   return { html: newHtml, resources };
 };
-
-const downloadResource = (url, resourcePath) => axios
-  .get(url, { responseType: 'arraybuffer' })
-  .then((response) => fsp.writeFile(resourcePath, response.data));
 
 export {
   getResources,

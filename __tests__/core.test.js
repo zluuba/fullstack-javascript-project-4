@@ -33,15 +33,13 @@ const fixtureDir = getFixturePath(resources.dir);
 beforeAll(async () => {
   nock.disableNetConnect();
 
+  tempDir = os.tmpdir();
+
   htmlAfter = await readThisFile(getFixturePath(resources.html));
   htmlBefore = await readThisFile(path.join(fixtureDir, resources.html));
   pngResource = await readThisFile(path.join(fixtureDir, resources.png));
   cssResource = await readThisFile(path.join(fixtureDir, resources.css));
   jsResource = await readThisFile(path.join(fixtureDir, resources.js));
-});
-
-beforeEach(async () => {
-  tempDir = os.tmpdir();
 });
 
 test('downloadPage main', async () => {
