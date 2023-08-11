@@ -27,12 +27,7 @@ const downloadPage = (sourceUrl, outPath = process.cwd()) => {
   log(`Getting data from ${sourceUrl}`);
 
   return axios.get(sourceUrl)
-    .then((response) => {
-      if (response.status !== 200) {
-        throw new Error('Network error. Cannot download HTML-page.');
-      }
-      return getResources(sourceUrl, response.data, resoursesDirName);
-    })
+    .then((response) => getResources(sourceUrl, response.data, resoursesDirName))
     .then(({ html, resources }) => {
       currResources = resources;
       return prettier.format(html, { parser: 'html' });
