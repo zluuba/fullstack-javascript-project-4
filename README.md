@@ -103,9 +103,10 @@ make reinstall
 ## Demos
 
 ### Package setup
-
+https://github.com/zluuba/page-loader/assets/87614163/6ffe8fdf-900b-4a70-b06c-d4bd72055a78
 
 ### Usage
+https://github.com/zluuba/page-loader/assets/87614163/bd6f9c43-bf3d-4f4b-adf8-a881aa1204da
 
 
 ##
