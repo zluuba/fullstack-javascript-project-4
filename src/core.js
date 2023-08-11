@@ -23,28 +23,25 @@ const downloadPage = (sourceUrl, outPath = process.cwd()) => {
   const resoursesDirName = `${pageName}_files`;
   const resourcesDirPath = path.join(outPath, resoursesDirName);
 
-  let currResources;
+  let resourcesData;
   log(`Getting data from ${sourceUrl}`);
 
   return axios.get(sourceUrl)
     .then((response) => getResources(sourceUrl, response.data, resoursesDirName))
-    .then(({ html, resources }) => {
-      currResources = resources;
-      return prettier.format(html, { parser: 'html' });
+    .then((data) => {
+      resourcesData = data.resources;
+      return prettier.format(data.html, { parser: 'html' });
     })
-    .then((prettifiedHtml) => {
-      log(`Writing HTML-file: ${htmlPagePath}`);
-      return fsp.writeFile(htmlPagePath, prettifiedHtml);
+    .then((formattedHtml) => {
+      log(`Writing HTML-file to: ${htmlPagePath}`);
+      return fsp.writeFile(htmlPagePath, formattedHtml);
     })
     .then(() => {
-      if (currResources) {
-        log(`Creating resource dir: ${resourcesDirPath}`);
-        fsp.mkdir(resourcesDirPath, { recursive: true });
-      }
-      return currResources;
+      log(`Creating resource dir: ${resourcesDirPath}`);
+      return fsp.mkdir(resourcesDirPath, { recursive: true });
     })
-    .then((resources) => {
-      const tasks = resources.map(({ url, name }) => {
+    .then(() => {
+      const tasks = resourcesData.map(({ url, name }) => {
         const fullPath = path.join(resourcesDirPath, name);
 
         return {
@@ -57,7 +54,7 @@ const downloadPage = (sourceUrl, outPath = process.cwd()) => {
       const listr = new Listr(tasks, { concurrent: true });
       return listr.run();
     })
-    .then(() => log('Finishing program... \n'))
+    .then(() => log('Finishing program...'))
     .then(() => htmlPageName);
 };
 
