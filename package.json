@@ -26,13 +26,13 @@
     "nock": "^13.3.2"
   },
   "author": "Luybov Nikitina <zluyba.nikitina@gmail.com>",
-  "homepage": "https://github.com/zluuba/page-loader-js#readme",
+  "homepage": "https://github.com/zluuba/page-loader#readme",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zluuba/page-loader-js.git"
+    "url": "git+https://github.com/zluuba/page-loader.git"
   },
   "bugs": {
-    "url": "https://github.com/zluuba/page-loader-js/issues"
+    "url": "https://github.com/zluuba/page-loader/issues"
   }
 }
