@@ -55,35 +55,35 @@ page-loader --help
 Load the html page (from url) and all available resources (img, link and script tags). <br>
 The html page is loaded into the current working directory. Then creates a folder url_files <br>
 for resources and all resources are loaded there. <br>
-```js
+```c
 page-loader <url>
 
 // file tree before:                file tree after:
 // root/                                root/
 //  |__mydir/                            |__mydir/
 //     |__file.txt                          |__file.txt
-//                                       |__google-com.html              # loaded html page
-//                                       |__google_files/                # resources folder
-//                                          |__google-logo.png           # resource
+//                                       |__google-com.html              ← loaded html page
+//                                       |__google_files/                ← resources folder
+//                                          |__google-logo.png           ← resource
 ```
 
 
 Download html-page and all available resources to the specified directory.
-```js
+```c
 page-loader -o <dir> <url>
 
 // file tree before:                 file tree after:
 // root/                                 root/
 //  |__mydir/                             |__mydir/
 //     |__file.txt                           |__file.txt
-//                                           |__google-com.html          # loaded html page
-//                                           |__google_files/            # resources folder
-//                                              |__google-logo.png       # resource
+//                                           |__google-com.html          ← loaded html page
+//                                           |__google_files/            ← resources folder
+//                                              |__google-logo.png       ← resource
 ```
 
 Debug option shows all debug messages. <br>
 P.S. without the debug option, you will only see messages about resources being loaded.
-```js
+```c
 page-loader -d <url>
 
 // What you will see in the terminal:
