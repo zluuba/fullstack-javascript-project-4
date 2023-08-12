@@ -41,6 +41,7 @@ page-loader [-h] [-o OUTPUT] url
 
 -h, --help                # print help text
 -o, --output              # set output directory
+-d, --debug               # shows debug messages
 ```
 
 ### Page loader commands
@@ -75,6 +76,26 @@ page-loader -o <dir> <url>
 #                                           |__google-com.html          # loaded html page
 #                                           |__google_files/            # resources folder
 #                                              |__google-logo.png       # resource
+
+
+# Debug option shows all debug messages.
+# P.S. without the debug option, you will only see messages about resources being loaded. 
+# Example command: "page-loader -d https://google.com"
+page-loader -d <url>
+
+# What you will see in the terminal:
+# $ page-loader -d https://google.com
+#
+#   Recieved URL: "https://google.com"
+#   Recieved Path: "/users/human/cd"
+#   Getting data from "https://google.com"
+#   Resource was find: "https://google.com/textinputassistant/tia.png"
+#   Writing HTML-file to: "/users/human/cd/google-com.html"
+#   Creating resource dir: "/users/human/cd/google-com_files"
+#   Downloading resource: "https://google.com/textinputassistant/tia.png"
+#   Finishing program...
+#
+#   Page successfully loaded: "google-com.html"
 ```
 
 
