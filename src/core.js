@@ -12,8 +12,13 @@ import {
 
 const log = debug('page-loader');
 
-const downloadPage = (sourceUrl, outPath = process.cwd()) => {
-  log(`Recieved URL: "${sourceUrl}", Path: "${outPath}"`);
+const downloadPage = (sourceUrl, outPath = process.cwd(), debugApp = false) => {
+  if (debugApp) {
+    debug.enable('page-loader');
+  }
+
+  log(`Recieved URL: "${sourceUrl}"`);
+  log(`Recieved Path: "${outPath}"`);
 
   const pageName = getPageName(sourceUrl);
 

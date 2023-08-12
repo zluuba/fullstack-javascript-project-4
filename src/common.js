@@ -15,7 +15,6 @@ const downloadResource = (url, resourcePath) => axios
   .then((response) => fsp.writeFile(resourcePath, response.data));
 
 const getResource = (sourceUrl, resourceUrl) => {
-  log(`Getting resource: ${resourceUrl}`);
   const urlSource = new URL(sourceUrl);
   const urlResource = new URL(resourceUrl, sourceUrl);
 
