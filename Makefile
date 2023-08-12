@@ -3,7 +3,7 @@ install:
 	sudo npm link
 
 reinstall:
-	npm link
+	sudo npm link
 
 lint:
 	npx eslint .
