@@ -45,57 +45,60 @@ page-loader [-h] [-o OUTPUT] url
 ```
 
 ### Page loader commands
-```python
-# Outputs brief documentation for how to invoke the program
+
+Outputs brief documentation for how to invoke the program.
+```ch
 page-loader --help
+```
 
 
-# Load the html page (from <url>) and all available resources (img, link and script tags).
-# The html page is loaded into the current working directory. Then creates a folder <url>_files
-# for resources and all resources are loaded there.
-# Example: "page-loader https://google.com"
+Load the html page (from url) and all available resources (img, link and script tags). <br>
+The html page is loaded into the current working directory. Then creates a folder url_files <br>
+for resources and all resources are loaded there. <br>
+```js
 page-loader <url>
 
-# file tree before:                file tree after:
-# root/                                root/
-#  |__mydir/                            |__mydir/
-#     |__file.txt                          |__file.txt
-#                                       |__google-com.html              # loaded html page
-#                                       |__google_files/                # resources folder
-#                                          |__google-logo.png           # resource
+// file tree before:                file tree after:
+// root/                                root/
+//  |__mydir/                            |__mydir/
+//     |__file.txt                          |__file.txt
+//                                       |__google-com.html              # loaded html page
+//                                       |__google_files/                # resources folder
+//                                          |__google-logo.png           # resource
+```
 
 
-# Download html-page and all available resources to the specified directory.
-# Example command: "page-loader -o mydir/ https://google.com"
+Download html-page and all available resources to the specified directory.
+```js
 page-loader -o <dir> <url>
 
-# file tree before:                 file tree after:
-# root/                                 root/
-#  |__mydir/                             |__mydir/
-#     |__file.txt                           |__file.txt
-#                                           |__google-com.html          # loaded html page
-#                                           |__google_files/            # resources folder
-#                                              |__google-logo.png       # resource
+// file tree before:                 file tree after:
+// root/                                 root/
+//  |__mydir/                             |__mydir/
+//     |__file.txt                           |__file.txt
+//                                           |__google-com.html          # loaded html page
+//                                           |__google_files/            # resources folder
+//                                              |__google-logo.png       # resource
+```
 
-
-# Debug option shows all debug messages.
-# P.S. without the debug option, you will only see messages about resources being loaded. 
-# Example command: "page-loader -d https://google.com"
+Debug option shows all debug messages. <br>
+P.S. without the debug option, you will only see messages about resources being loaded.
+```js
 page-loader -d <url>
 
-# What you will see in the terminal:
-# $ page-loader -d https://google.com
-#
-#   Recieved URL: "https://google.com"
-#   Recieved Path: "/users/human/cd"
-#   Getting data from "https://google.com"
-#   Resource was find: "https://google.com/textinputassistant/tia.png"
-#   Writing HTML-file to: "/users/human/cd/google-com.html"
-#   Creating resource dir: "/users/human/cd/google-com_files"
-#   Downloading resource: "https://google.com/textinputassistant/tia.png"
-#   Finishing program...
-#
-#   Page successfully loaded: "google-com.html"
+// What you will see in the terminal:
+// $ page-loader -d https://google.com
+//
+//   Recieved URL: "https://google.com"
+//   Recieved Path: "/users/human/cd"
+//   Getting data from "https://google.com"
+//   Resource was find: "https://google.com/textinputassistant/tia.png"
+//   Writing HTML-file to: "/users/human/cd/google-com.html"
+//   Creating resource dir: "/users/human/cd/google-com_files"
+//   Downloading resource: "https://google.com/textinputassistant/tia.png"
+//   Finishing program...
+//
+//   Page successfully loaded: "google-com.html"
 ```
 
 
