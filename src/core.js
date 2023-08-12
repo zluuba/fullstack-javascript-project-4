@@ -29,7 +29,7 @@ const downloadPage = (sourceUrl, outPath = process.cwd(), debugApp = false) => {
   const resourcesDirPath = path.join(outPath, resoursesDirName);
 
   let resourcesData;
-  log(`Getting data from ${sourceUrl}`);
+  log(`Getting data from "${sourceUrl}"`);
 
   return axios.get(sourceUrl)
     .then((response) => getResources(sourceUrl, response.data, resoursesDirName))
@@ -38,11 +38,11 @@ const downloadPage = (sourceUrl, outPath = process.cwd(), debugApp = false) => {
       return prettier.format(data.html, { parser: 'html' });
     })
     .then((formattedHtml) => {
-      log(`Writing HTML-file to: ${htmlPagePath}`);
+      log(`Writing HTML-file to: "${htmlPagePath}"`);
       return fsp.writeFile(htmlPagePath, formattedHtml);
     })
     .then(() => {
-      log(`Creating resource dir: ${resourcesDirPath}`);
+      log(`Creating resource dir: "${resourcesDirPath}"`);
       return fsp.mkdir(resourcesDirPath, { recursive: true });
     })
     .then(() => {
@@ -50,7 +50,7 @@ const downloadPage = (sourceUrl, outPath = process.cwd(), debugApp = false) => {
         const fullPath = path.join(resourcesDirPath, name);
 
         return {
-          title: `Downloading resource: ${url}`,
+          title: `Downloading resource: "${url}"`,
           task: () => downloadResource(url, fullPath)
             .catch(() => {}),
         };

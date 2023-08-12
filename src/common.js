@@ -45,7 +45,7 @@ const getResources = (link, html, resDirName) => {
         const resource = getResource(link, url);
 
         if (resource.name) {
-          log(`Resource was find: ${resource.url}`);
+          log(`Resource was find: "${resource.url}"`);
 
           resources.push(resource);
           newHtml = newHtml.replace(url, path.join(resDirName, resource.name));
